@@ -22,7 +22,7 @@ class FavouritesActivity : AppCompatActivity(){
     }
 
 
-    private fun setList(cats: List<Cat>){
+    private fun setList(cats: List<CatDB>){
 
         val adapter = CatAdapter(cats)
         recyclerViewId.adapter = adapter

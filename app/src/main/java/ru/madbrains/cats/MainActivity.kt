@@ -23,7 +23,11 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initRealm()
+
         getCatsFromServer()
+
+        showListFromDB()
 
         main_button.text = getString(R.string.favourites_button)
 
@@ -48,7 +52,7 @@ class MainActivity: AppCompatActivity() {
     }
 
 
-    private fun setList(cats: List<Cat>) {
+    private fun setList(cats: List<CatDB>) {
 
         val adapter = CatAdapter(cats)
         recyclerViewId.adapter = adapter
@@ -62,9 +66,9 @@ class MainActivity: AppCompatActivity() {
 
 
     // Функция-парсер
-    private fun parseResponse(responseText: String?): List<Cat> {
+    private fun parseResponse(responseText: String?): List<CatDB> {
         // Создаем пустой список объектов класса Cat
-        val catList: MutableList<Cat> = mutableListOf()
+        val catList: MutableList<CatDB> = mutableListOf()
         // Преобразуем текст ответа сервера в JSON массива
         val jsonArray = JSONArray(responseText)
         // В цикле по кол-ву элементаов массива JSON объектов
@@ -76,7 +80,7 @@ class MainActivity: AppCompatActivity() {
             // Создаем объект класса Cat с вышеполученными параметрами
             val catId: String = jsonObject.getString("id")
             // Создаем объект класса Cat с вышеполученными параметрами
-            val cat = Cat(catText, catId)
+            val cat: CatDB = Cat(catText, catId).cat
             catList.add(cat)
         }
         return catList
@@ -87,8 +91,15 @@ class MainActivity: AppCompatActivity() {
 
         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
             val responseText: String? = response.body()?.string()
-            Log.d("responseTag", responseText)
-            setList(parseResponse(responseText))
+            //Log.d("responseTag", responseText)
+            //setList(parseResponse(responseText))
+
+            responseText?.let{
+                val catList:List<CatDB> = parseResponse(it)
+
+                saveIntoDB(catList)
+                showListFromDB()
+            }
 
         }
 
@@ -101,8 +112,8 @@ class MainActivity: AppCompatActivity() {
     private fun getCatsFromServer() {
         getApi().getCats().enqueue(callback)
     }
-}
-/*
+
+
     // функция инициализации Realm
     private fun initRealm(){
         Realm.init(this)
@@ -115,7 +126,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     // сохранение загруэенных фактов о котах в БД
-    fun saveIntoDB(cats: List<Cat>) {
+    fun saveIntoDB(cats: List<CatDB>) {
         // получаем ссылку на БД
         val realm:Realm = Realm.getDefaultInstance()
         realm.beginTransaction()
@@ -125,21 +136,19 @@ class MainActivity: AppCompatActivity() {
     }
 
 
-
-
-
-
     // чтение из БД
-    fun loadFromDB():List<Cat>{
+    fun loadFromDB():List<CatDB>{
         // получаем ссылку на БД
         val realm: Realm = Realm.getDefaultInstance()
-        return realm.where(Cat::class.java).findAll()
+        return realm.where(CatDB::class.java).findAll()
     }
 
     // отображение списка из БД
     fun showListFromDB(){
-        val cats: List<Cat> = loadFromDB()
-        //setList(cats)
+        val cats: List<CatDB> = loadFromDB()
+        setList(cats)
     }
-*/
+
+}
+
 

@@ -14,8 +14,8 @@ class CatsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val textView: TextView = itemView.findViewById(R.id.textViewId)
 
-    fun bind(cat: Cat){
-        textView.text = cat.text; // загружаем текст в TextView
+    fun bind(cat: CatDB){
+        textView.text = cat.text // загружаем текст в TextView
 
         itemView.setOnClickListener{
             openDetailActivity(itemView.context, cat.text)
@@ -33,7 +33,7 @@ class CatsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 // адаптер - управляет элементами
-class CatAdapter(private val cats: List<Cat>) : RecyclerView.Adapter<CatsViewHolder>(){
+class CatAdapter(private val cats: List<CatDB>) : RecyclerView.Adapter<CatsViewHolder>(){
 
     // Создает новый объект ViewHolder всякий раз, когда RecyclerView нуждается в этом.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatsViewHolder {
