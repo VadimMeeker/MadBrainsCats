@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Cats</string>
+    <string name="favourites_button">Перейти в избранное</string>
+    <string name="add_favourite_button">Добавить в избранное</string>
+    <string name="delete_favourite_button">Удалить из избранного</string>
+    <string name="facts_button">Перейти в факты</string>
+</resources>
